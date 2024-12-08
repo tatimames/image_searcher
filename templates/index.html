@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content from top */
+            flex-direction: column;
+            position: relative;
+        }
+
+        .search-container {
+            text-align: center;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10; /* Ensure the search bar and spinner stay on top */
+        }
+
+        .search-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px; /* Space between input and button */
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .output {
+            position: absolute; /* Keep the output below the search bar */
+            top: 30%; /* Place it below the search bar */
+            width: 100%; /* Ensure it fills the viewport width */
+            margin-top: 45px;
+            text-align: center; /* Center the output */
+        }
+
+        img {
+            margin-top: 30px;
+            max-width: 100%; /* Ensure the image fits within the viewport */
+            height: 200px;
+            margin-bottom: 20px; /* Add some space between images */
+        }
+
+        /* Loading spinner style */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px; /* Space between search bar and loading spinner */
+            display: none; /* Hidden initially */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1>Search for Image</h1>
+        <form class="search-bar" method="POST" id="searchForm">
+            <input type="text" name="search" placeholder="Enter your query" value="{{ search_query or '' }}">
+            <button type="submit" id="submitButton">Search</button>
+        </form>
+        <div id="loading" class="loader"></div>
+    </div>
+
+    <!-- output -->
+    <div class="output">
+        {% if search_query %}
+            <h2>You searched for: {{ search_query }}</h2>
+        {% endif %}
+
+        {% if image_urls %}
+            <div>
+                <h3>Top 6 image results:</h3>
+                {% for url in image_urls %}
+                    <img src="{{ url }}" alt="Image result">
+                {% endfor %}
+            </div>
+        {% elif search_query %}
+            <p>No image found for "{{ search_query }}". Please try another search.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Get elements
+        const form = document.getElementById("searchForm");
+        const submitButton = document.getElementById("submitButton");
+        const loadingSpinner = document.getElementById("loading");
+
+        // Show loading spinner and disable button on form submit
+        form.onsubmit = function() {
+            // Show loading spinner
+            loadingSpinner.style.display = "block";
+
+            // Disable submit button
+            submitButton.disabled = true;
+        }
+    </script>
+</body>
+</html>
