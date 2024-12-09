@@ -1,9 +1,13 @@
 from elasticsearch import Elasticsearch
 import utils
+import os
+
+# Get Elasticsearch host and port from environment variables
+es_host = os.getenv("ES_HOST", "elasticsearch")  # "elasticsearch" is the service name in Docker Compose
 
 # Database connection data
 es = Elasticsearch(
-    hosts=[{'host': 'localhost', 'port': 9200, 'scheme':'https'}],
+    hosts=[{'host': es_host, 'port': 9200, 'scheme':'http'}],
     basic_auth=('elastic', 'changeme'),
     verify_certs=False,  # Disable certificate verification
     ssl_show_warn=False  # Suppress SSL warnings in logs

@@ -1,7 +1,8 @@
 import os
 from flask import Flask, json, jsonify, render_template, request
-import utils
+
 import DAL
+import utils
 
 app = Flask(__name__)
 

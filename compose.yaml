@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - ES_HOST=elasticsearch
+      - ES_PORT=9200
+      - ES_SCHEME=http  # Use http for unsecured connection
+    depends_on:
+      - elasticsearch
+    networks:
+      - app_network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.1
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=changeme
+      - xpack.security.enabled=false  # Disable security
+      - xpack.security.http.ssl.enabled=false  # Disable SSL
+    ports:
+      - "9200:9200"  # Expose HTTP port 9200
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]  # Use HTTP for health check
+      interval: 30s
+      retries: 3
+
+networks:
+  app_network:
+    driver: bridge
+
