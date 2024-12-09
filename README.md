@@ -23,7 +23,7 @@ This command will create a Docker network with two containers:
 - **Elasticsearch** — Acts as a local vector database to store image embeddings.
 - **Application container** — The main application that handles user requests and processes images.
 
-- **Important Note**
+**Important Note**
 > **Note:** Since the Elasticsearch database is local, you must upload images to populate the database before running any search queries. This is done via the `/upload` endpoint (details below). Before starting to query via the Home Page, please run /upload with the file **image_urls.txt** as body.
 
 ---
