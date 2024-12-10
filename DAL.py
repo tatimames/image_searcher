@@ -1,3 +1,4 @@
+import json
 from elasticsearch import Elasticsearch
 import utils
 import os
@@ -22,13 +23,16 @@ def insert_data(embedding, url):
     }
 
     # Index the document in Elasticsearch
-    es.index(index=index_name, id=url, body=document)
+    try:
+        es.index(index=index_name, id=url, body=document)
+    except Exception as e:
+        return json.dumps({'success': False, 'error': 'An unexpected error occurred when inserting the image to the DB'}), 
+        500, {'ContentType': 'application/json'}
     print(f"Indexed {url} with ID {url}")
     
 
 def does_url_exist(url): # Checks whether image URL already exists in DB 
     existing_doc = es.exists(index=index_name, id=url)
-    print(existing_doc)
     return existing_doc
 
 

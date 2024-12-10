@@ -21,6 +21,7 @@ def download_image(url, image_path):# Recieves url and dowloads image
 
 def generate_embedding(image_path): # Use openAI CLIP to embed image
     try:
+        print("Generating embedding")
         model, preprocess = clip.load("ViT-B/32", device="cpu")
         
         image = Image.open(image_path).convert('RGB') 
